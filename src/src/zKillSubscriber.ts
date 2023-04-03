@@ -4,8 +4,10 @@ import {REST} from '@discordjs/rest';
 import AsyncLock from 'async-lock';
 import MemoryCache from 'memory-cache';
 import ogs from 'open-graph-scraper';
+import { convert } from 'owospeak';
 import * as fs from 'fs';
 import {EsiClient} from './lib/esiClient';
+
 
 export enum SubscriptionType {
     ALL = 'all',
@@ -271,9 +273,10 @@ export class ZKillSubscriber {
                 try {
                     const content : MessageOptions = {};
                     if(embedding?.error === false) {
+                        const desc = embedding?.result.ogDescription;
                         content.embeds = [{
                             title: embedding?.result.ogTitle,
-                            description: embedding?.result.ogDescription,
+                            description: convert((desc as string), {stutter: (Math.floor(Math.random() * 5) > 2), tilde: (Math.floor(Math.random() * 5) > 2)}),
                             thumbnail: {
                                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                 // @ts-ignore
